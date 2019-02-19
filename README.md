@@ -1,6 +1,13 @@
 # Auth Module 
 
 ### Vars 
+
+__ 
+is_superuser
+is_staff
+
+
+__
 id_user
 email
 username
@@ -109,5 +116,20 @@ true = pre encrypted password
 ```
     $user->set_password("password", true);
 ```
+
+### Gruops and permissions 
+- Crear grupo 
+- Crear permiso
+- Asignar permiso a un grupo 
+- Remove permiso a un grupo 
+- Asignar grupo a un usuario 
+- Asignar permiso a un usuario 
+- Asignar permiso a un usuario 
+
+- Remove grupo a un usuario 
+- Remove permiso a un usuario 
+- Remove permiso a un usuario 
+
+- Check permission check_permission("view_bla");
 
 

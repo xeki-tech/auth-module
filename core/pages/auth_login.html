@@ -1,0 +1,32 @@
+{% extends "_base.html" %}
+{% block content %}
+{{ parent() }}
+
+
+
+
+<div class="container">
+    <div class="col-md-6">
+        <form method="post">
+            <h2>Form losdgin</h2>
+            <fieldset class="form-group">
+                <label for="user_identifier">Correo</label>
+                <input name="user_identifer" type="email" class="form-control" id="user_identifier" value="{{email_temp}}"
+                       placeholder="Enter email">
+            </fieldset>
+            <fieldset class="form-group">
+                <label for="user_pass">Contraseña</label>
+                <input name="user_pass" type="password" class="form-control" id="user_pass"
+                       placeholder="Enter password">
+            </fieldset>
+            <input name="xeki_action" value="xeki_auth::login" type="hidden">
+            <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ parent() }}
+
+{% endblock %}

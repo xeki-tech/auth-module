@@ -78,7 +78,7 @@ user_exist("user_identifier");
 ## USER 
 ### Get user 
 ```
-$usr = get_user();
+$user = get_user();
 ```
 
 ### Get info array 
@@ -90,7 +90,7 @@ $array["lastname"];
 
 ### Get info 
 ```
-$user->get_("lastname");
+$user->get("lastname");
 ```
 
 ### Get field user 

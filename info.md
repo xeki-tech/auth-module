@@ -62,7 +62,7 @@ $xeki_auth =  \xeki\module_manager::import_module('xeki_auth');
 $xeki_auth->set_name_space("my_name_space_application");
 
 // set login page
-$user_zone->set_logged_page("user/my_login_page");
+$auth_module->set_logged_page("user/my_login_page");
 
 // check if is logged, if is not logged is redirected to login page
 $xeki_auth->check_logged();
@@ -92,7 +92,7 @@ $xeki_auth =  \xeki\module_manager::import_module('xeki_auth');
 
 // if not login redirect to login page
 
-$user_zone->set_logged_page("my login custom");
+$auth_module->set_logged_page("my login custom");
 $xeki_auth->check_logged();
 
 // just return login or not 

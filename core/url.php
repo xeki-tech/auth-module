@@ -1,16 +1,18 @@
 <?php
-$user_zone = \xeki\module_manager::import_module('xeki_auth');
-$enable_controllers = $user_zone->get_value_param("use_module_controllers");
+
+// Works only form main module 
+$auth_module = \xeki\module_manager::import_module('xeki_auth');
+$enable_controllers = $auth_module->get_value_param("use_module_controllers");
 // d($enable_controllers);
 if($enable_controllers){
 
     ## load urls for config file
-    $login_url=$user_zone->get_value_param("login_page_url");
-    $register_url=$user_zone->get_value_param("register_page_url");
-    $logout_url=$user_zone->get_value_param("logout_page_url");
-    $recover_url=$user_zone->get_value_param("recover_pass_page_url");
+    $login_url=$auth_module->get_value_param("login_page_url");
+    $register_url=$auth_module->get_value_param("register_page_url");
+    $logout_url=$auth_module->get_value_param("logout_page_url");
+    $recover_url=$auth_module->get_value_param("recover_pass_page_url");
 
-    $confirm_account_route_url=$user_zone->get_value_param("confirm_account_route_url");
+    $confirm_account_route_url=$auth_module->get_value_param("confirm_account_route_url");
 
 
 
@@ -45,13 +47,13 @@ if($enable_controllers){
 
 
     // facebook
-    $facebook_login=$user_zone->get_value_param("facebook_login");
+    $facebook_login=$auth_module->get_value_param("facebook_login");
     if($facebook_login){
-        $facebook_auth_page=$user_zone->get_value_param("facebook_auth_page");
+        $facebook_auth_page=$auth_module->get_value_param("facebook_auth_page");
         \xeki\routes::any("$facebook_auth_page", 'auth_facebook', "xeki_auth");
         \xeki\routes::any("$facebook_auth_page/", 'auth_facebook', "xeki_auth");
 
-        $facebook_call_back_url=$user_zone->get_value_param("facebook_call_back_url");
+        $facebook_call_back_url=$auth_module->get_value_param("facebook_call_back_url");
         \xeki\routes::any("$facebook_call_back_url", "auth_facebook_callback", "xeki_auth");
         \xeki\routes::any("$facebook_call_back_url/", "auth_facebook_callback", "xeki_auth");
     }

@@ -44,8 +44,8 @@ if(isset($parms['code'])){
 }
 else{
     // check if is logged
-    $user_zone = \xeki\module_manager::import_module('xeki_auth');
-    $folder_auth=$user_zone->get_folder();
+    $auth_module = \xeki\module_manager::import_module('xeki_auth');
+    $folder_auth=$auth_module->get_folder();
     \xeki\html_manager::render("{$folder_auth}/auth_confirm_account.html", $array_data);
 }
 //

@@ -16,11 +16,11 @@
 //d($AG_MODULES);
 $array_data = array();
 
-$user_zone = \xeki\module_manager::import_module('xeki_auth');
-$user_zone->pageLoginCheck();
+$auth_module = \xeki\module_manager::import_module('xeki_auth');
+$auth_module->pageLoginCheck();
 
 
 
-$folder_auth=$user_zone->get_folder();
+$folder_auth=$auth_module->get_folder();
 $array_data['xeki_auth_temp_check_user']=isset($_SESSION['xeki_auth::temp_check_user'])?$_SESSION['xeki_auth::temp_check_user']:"";
 \xeki\html_manager::render("{$folder_auth}/auth_register.html", $array_data);

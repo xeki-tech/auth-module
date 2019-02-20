@@ -2,16 +2,16 @@
 
 require_once(dirname(__FILE__) . "/../libs/vendor/facebook/graph-sdk/src/Facebook/autoload.php");
 
-$user_zone = \xeki\module_manager::import_module('xeki_auth');
+$auth_module = \xeki\module_manager::import_module('xeki_auth');
 
 $AG_BASE_COMPLETE = \xeki\html_manager::get_url_base_complete();
 
-$facebook_app_id = $user_zone->get_value_param("facebook_app_id");
-$facebook_app_secret = $user_zone->get_value_param("facebook_app_secret");
+$facebook_app_id = $auth_module->get_value_param("facebook_app_id");
+$facebook_app_secret = $auth_module->get_value_param("facebook_app_secret");
 
 
 
-$facebook_app_call_back_url = $AG_BASE_COMPLETE.$user_zone->get_value_param("facebook_call_back_url");
+$facebook_app_call_back_url = $AG_BASE_COMPLETE.$auth_module->get_value_param("facebook_call_back_url");
 
 $fb = new Facebook\Facebook([
     'default_graph_version' => 'v2.10',

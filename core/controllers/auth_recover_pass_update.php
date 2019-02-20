@@ -19,6 +19,6 @@ $vars = \xeki\routes::$vars;
 $_SESSION['recover_code'] = $vars['code'];
 $array_data['email_temp'] = isset($_SESSION['email_temp'])?$_SESSION['email_temp']:"";
 
-$user_zone = \xeki\module_manager::import_module('xeki_auth');
-$folder_auth=$user_zone->get_folder();
+$auth_module = \xeki\module_manager::import_module('xeki_auth');
+$folder_auth=$auth_module->get_folder();
 \xeki\html_manager::render("{$folder_auth}/auth_recover_pass_update.html", $array_data);

@@ -1,11 +1,10 @@
 <?php
-
-require_once dirname(__FILE__).'/../_common/sql_lib.php';
-require_once dirname(__FILE__).'/../../libs/xeki_util_methods.php';
-require_once dirname(__FILE__).'/../../libs/xeki_core/module_manager.php';
+// script for create data base 
+require_once dirname(__FILE__).'/../../../libs/xeki_util_methods.php';
+require_once dirname(__FILE__).'/../../../libs/xeki_core/module_manager.php';
 
 ## get main number of config db
-$sql=\xeki\module_manager::import_module("xeki_db_sql","main");
+$sql = \xeki\module_manager::import_module("xeki_db_sql","main");
 
 
 // user permissions
@@ -16,7 +15,7 @@ $user_permissions_table = array(
         'name' => 'text:NN:n:true:true:Name',
     ),
 );
-createSqlxeki_v1($user_permissions_table,$sql);
+$sql->array_to_sql($user_permissions_table);
 
 
 $user_namespace_table = array(
@@ -26,7 +25,8 @@ $user_namespace_table = array(
         'name' => 'text:NN:n:true:true:Name',
     ),
 );
-createSqlxeki_v1($user_namespace_table,$sql);
+
+$sql->array_to_sql($user_namespace_table,$sql);
 
 
 // user
@@ -55,7 +55,7 @@ $user_table = array(
         'xeki_auth_state_user' => 'text:NN:n:true:true:state_user', ## for partial and complete user
     ),
 );
-createSqlxeki_v1($user_table,$sql);
+$sql->array_to_sql($user_table,$sql);
 
 
 $user_permissions_table_ref = array(
@@ -65,7 +65,7 @@ $user_permissions_table_ref = array(
         'user_permissions_id' => 'number:NN:n:true:true:Name',
     ),
 );
-createSqlxeki_v1($user_permissions_table_ref,$sql);
+$sql->array_to_sql($user_permissions_table_ref,$sql);
 
 $user_namespace_table_ref = array(
     'table' => 'user_namespace_table_ref',
@@ -74,7 +74,7 @@ $user_namespace_table_ref = array(
         'user_namespace_id' => 'number:NN:n:true:true:Name',
     ),
 );
-createSqlxeki_v1($user_namespace_table_ref,$sql);
+$sql->array_to_sql($user_namespace_table_ref,$sql);
 
 // user_permissions
 

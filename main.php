@@ -8,7 +8,7 @@
 namespace xeki_auth;
 
 
-require_once dirname(__FILE__) . "/core/common/xeki_auth.php";
+require_once dirname(__FILE__) . "/core/models/xeki_auth.php";
 
 class main
 {
@@ -52,8 +52,8 @@ class main
     {
         if (self::$object == null) {
 
-            $sql = \xeki\module_manager::import_module('xeki_db_sql', 'main');
-            self::$object = new xeki_auth($this->config, $sql);
+
+            self::$object = new xeki_auth($this->config,);
         }
 //        d(self::$sql);
 //        $info = self::$sql->query("SELECT * FROM blog");
@@ -69,35 +69,9 @@ class main
 
     function set_up_pages()
     {
-        global $AG_HTML;
 
-        if ($this->default_pages) {
-            
-            $AG_HTML->set_path(dirname(__FILE__) . "/core/pages/");
-        }
-        else{
-            
-            $AG_HTML->set_path(dirname(__FILE__) . "/../../{$this->folder_base}");
-        }
 
     }
 
-    function set_up_db($config)
-    {
-
-        $sql = \xeki\module_manager::import_module('xeki_db_sql', 'main');
-        require_once dirname(__FILE__) . "../_common/sql_lib.php";
-        $array_sql = array(
-            "table" => $config['table'],
-            "elements" => array(
-                $config['field_id'] => 'number',
-                $config['field_user'] => 'text',
-                $config['field_password'] => 'text',
-                $config['field_recover_code'] => 'text',
-            ),
-        );
-
-        createSql($array_sql, $sql);
-    }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace xeki_auth;
+namespace auth;
 
 /**
  * Class xeki_auth
@@ -115,6 +115,7 @@ class xeki_auth
      */
     private $name_space = "default";
 
+    private $db_config = "main";
     /**
      * @var string
      */
@@ -162,10 +163,10 @@ class xeki_auth
      * @param $config
      * @param $sql
      */
-    function __construct($config, $sql)
+    function __construct($config)
     {
         $this->config_params = $config;
-        $this->sql = $sql;
+        $this->sql = $sql = \xeki\module_manager::import_module('db-sql', $this->db_config);
         if (!$this->is_session_started()) {
             ini_set('session.gc_maxlifetime', 36000);
             session_set_cookie_params(36000);
@@ -300,6 +301,7 @@ class xeki_auth
         return $this->user;
     }
 
+
     /**
      * @return array
      */
@@ -377,8 +379,6 @@ class xeki_auth
 
         }
 
-
-
         if ($valid_login) {
             $this->user = $info;
 
@@ -414,7 +414,6 @@ class xeki_auth
         // this is an ugly algorithm this work in this way for security :D
         // load info of user if exist
         $user = strtolower($user);
-
         $query = "SELECT * FROM {$this->table_user} WHERE {$this->field_user}='" . $user . "'";
 
         $info = $this->sql->query($query);

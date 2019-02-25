@@ -2,9 +2,10 @@
 namespace xeki_auth;
 require_once("AuthGroup.php");
 require_once("AuthPermission.php");
+require_once("AuthUser.php");
 
 /**
- * Class php-auth-module
+ * Class auth-module
  * @package xeki_auth
  * version 1
  */
@@ -19,7 +20,12 @@ class xeki_auth
 
     private $field_identifier = "email";
 
-    private $status="no_logged";
+    private $status = "no_logged";
+
+    private $local_config=[];
+
+    private $sql;
+    private $user;
 
     function get_value_param($key)
     {
@@ -38,7 +44,21 @@ class xeki_auth
         ini_set('session.gc_maxlifetime', $lifetime);
         session_set_cookie_params(time()+$lifetime);
 
-        $this->sql = $sql = \xeki\module_manager::import_module('db-sql', $this->db_config);
+        // set params
+
+        if (isset($config['encryption_method'])) $this->encryption_method = $config['encryption_method'];
+        if (isset($config['db_config'])) $this->db_config = $config['db_config'];
+        if (isset($config['field_identifier'])) $this->field_identifier = $config['field_identifier'];
+
+
+        $this->local_config =
+        [
+            "encryption_method"=>$this->encryption_method,
+            "db_config"=>$this->db_config,
+            "field_identifier"=>$this->field_identifier,
+        ];
+
+        $this->sql = \xeki\module_manager::import_module('db-sql', $this->db_config);
         // Create a new session if necessary
 
         // TODO handling better this error
@@ -86,7 +106,7 @@ class xeki_auth
                 else{
                 }
             }
-            if(!$this->load_seccion_db()){
+            if(!$this->load_info_from_db()){
 //                    $this->logout();
             }
         }
@@ -94,10 +114,36 @@ class xeki_auth
         // recover from db
         if(!empty($_SESSION['xeki_auth']['logged'])){
             if(empty($_SESSION['xeki_auth']['id_user'])) {
-                $this->load_seccion_db();
+                $this->load_info_from_db();
             }
         }
+
+
+
     }
+
+    function load_info_from_db(){
+
+        if(empty($_COOKIE['sk_2']))return false;
+
+        $query = "select * from user_session where sk_2 ='{$_COOKIE['sk_2']}'";
+
+        $info_session = $this->sql->query($query);
+
+        if (count($info_session)>0){
+            $info_session = $info_session[0];
+            $info = [];
+            $info['id']=$info_session['user_id'];
+            $_SESSION['xeki_auth']['logged'] = true;
+            $_SESSION['xeki_auth']['id_user'] = $info['id'];
+            $_SESSION['xeki_auth']['last_view'] = time();
+            $_SESSION['user_id'] = $info['id'];
+
+            return $info[0]['user_id'];
+        }
+        return false;
+    }
+
     static function logout(){
         session_unset();
         session_destroy();
@@ -230,14 +276,14 @@ class xeki_auth
     }
 
     function get_group($code){
-        $group = new AuthGroup($this->db_config);
+        $group = new Group($this->local_config);
         $group->load_code($code);
         return $group;
 
     }
 
     function get_permission($code){
-        $group = new AuthGroup($this->db_config);
+        $group = new Permission($this->local_config);
         $group->load_code($code);
         return $group;
 
@@ -246,7 +292,7 @@ class xeki_auth
 
 
     function login_status(){
-        d($_SESSION);
+//        d($_SESSION);
     }
 
     function login($user_identifier,$password){
@@ -263,11 +309,11 @@ class xeki_auth
         $user_identifier =$this->sql->sanitize($user_identifier);
 
         $query = "SELECT * FROM auth_user WHERE {$this->field_identifier} = '$user_identifier'";
-
         $info = $this->sql->query($query);
+        d($info);
         // for check and debug
         // check if exist
-        $valid_login = false;
+
         if ($info) if (count($info) > 0) {
             $info = $info[0];
             // check password
@@ -277,30 +323,33 @@ class xeki_auth
             }
         }
 
-        if ($this->load_user($info)) {
-
-        }
-
-        return true;
-
-    }
-    function load_user($info){
 
         // init user
-        $user = new User();
+        $user = new User($this->local_config);
         $user->load_info($info);
+
+        //
         $user->load_groups_permissions();
 
         $this->user = $user;
+
+        d($user->get("lastname"));
+        d($user->get("email"));
+        d($user->get("name"));
 
         if (!isset($_SESSION['xeki_auth'])) $_SESSION['xeki_auth'] = array();
         $_SESSION['xeki_auth']['logged'] = true;
         $_SESSION['xeki_auth']['id_user'] = $this->user->id;
         $_SESSION['xeki_auth']['last_view'] = time();
-        $_SESSION['xeki_auth']['user_info'] = $this->user;
+//        $_SESSION['xeki_auth']['user_info'] = $this->get_info();
 
         return true;
 
+    }
+    function get_user(){
+
+
+        return $this->user;
     }
 
 

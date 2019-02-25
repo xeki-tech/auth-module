@@ -2,12 +2,12 @@
 namespace xeki_auth;
 
 /**
- * Class php-auth-module
+ * Class auth-module
  * @package xeki_auth
  * version 1
  */
 
-class AuthPermission
+class Permission
 {
     public $id;
     public $code;
@@ -15,9 +15,9 @@ class AuthPermission
 
 
     private $sql;
-    function __construct($db_config)
+    function __construct($local_config)
     {
-        $this->sql = \xeki\module_manager::import_module('db-sql',$db_config);
+        $this->sql = \xeki\module_manager::import_module('db-sql',$local_config['db_config']);
     }
 
 

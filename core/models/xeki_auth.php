@@ -328,9 +328,6 @@ class xeki_auth
         $user = new User($this->local_config);
         $user->load_info($info);
 
-        //
-        $user->load_groups_permissions();
-
         $this->user = $user;
 
         d($user->get("lastname"));

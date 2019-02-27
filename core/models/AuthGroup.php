@@ -22,11 +22,15 @@ class Group
 
     function load_code($code){
         $query="select * from auth_group where code='{$code}'";
+
         $group = $this->sql->query($query);
+        if(!$group){return new \xeki\error("sql_error");}
+        if(count($group)==0){return new \xeki\error("code_not_found");}
         $group = $group[0];
         $this->id = $group['id'];
         $this->code = $group['code'];
         $this->name =$group['name'];
+        return true;
     }
     function load_id($id){
         $query="select * from auth_group where id='{$id}'";

@@ -209,7 +209,8 @@ class xeki_auth
             return $res;
         }
         else{
-            return new \xeki\error("sql error \$sql->error() for debug");
+            d($this->sql->error());
+            return new \xeki\error("sql error");
         }
 
     }
@@ -296,9 +297,9 @@ class xeki_auth
     }
 
     function login($user_identifier,$password){
-
         $password = hash($this->encryption_method, $password);
-        $this->login_encrypted($user_identifier,$password);
+
+        return $this->login_encrypted($user_identifier,$password);
     }
 
 
@@ -310,19 +311,24 @@ class xeki_auth
 
         $query = "SELECT * FROM auth_user WHERE {$this->field_identifier} = '$user_identifier'";
         $info = $this->sql->query($query);
-        d($info);
         // for check and debug
         // check if exist
 
-        if ($info) if (count($info) > 0) {
+        if(!is_array($info)){
+//            d($this->sql->error());
+            return new \xeki\error("sql_error");
+        }
+        if(count($info) == 0)return new \xeki\error("not_user_exit");
+
+
+
+        if (count($info) > 0) {
             $info = $info[0];
             // check password
             if ($info["password"] != $password) {
-                // check name_space
-                return false;
+                return new \xeki\error("invalid_pass");
             }
         }
-
 
         // init user
         $user = new User($this->local_config);
@@ -330,9 +336,9 @@ class xeki_auth
 
         $this->user = $user;
 
-        d($user->get("lastname"));
-        d($user->get("email"));
-        d($user->get("name"));
+//        d($user->get("lastname"));
+//        d($user->get("email"));
+//        d($user->get("name"));
 
         if (!isset($_SESSION['xeki_auth'])) $_SESSION['xeki_auth'] = array();
         $_SESSION['xeki_auth']['logged'] = true;

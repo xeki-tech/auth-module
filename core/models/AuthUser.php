@@ -163,7 +163,7 @@ class User
         $query = "Select * from auth_user_group where user_ref='{$this->id}' and group_ref='{$group->id}'";
         $res = $this->sql->query($query);
         if(is_array($res)){
-            if(count($res)=0){
+            if(count($res)==0){
                 // handling error
                 return new \xeki\error("group_not_added");
             }
@@ -256,7 +256,7 @@ class User
         $query = "Select * from auth_user_permission where user_ref='{$this->id}' and permission_ref='{$permission->id}'";
         $res = $this->sql->query($query);
         if(is_array($res)){
-            if(count($res)=0){
+            if(count($res)==0){
                 // handling error
                 return new \xeki\error("permission_not_added");
             }

@@ -107,7 +107,7 @@ class User
         $error = $group->load_code($code_group);
 
         if(\xeki\core::is_error($error)){
-            return new \xeki\error("group ");
+            return $error;
         }
         d("group info");
         d($group->id);
@@ -115,9 +115,11 @@ class User
         // check is exist relation
         $query = "Select * from auth_user_group where user_ref='{$this->id}' and group_ref='{$group->id}'";
         $res = $this->sql->query($query);
+
         if(is_array($res)){
             if(count($res)>0){
                 // handling error
+
                 return new \xeki\error("group_already_added");
             }
         }
@@ -300,10 +302,18 @@ class User
         }
     }
 
+    public function get_groups(){
+        $query = "Select * from auth_user_group where user_ref='{$this->id}'";
+        $res = $this->sql->query($query);
+        d($this->sql->error());
+
+        return $res;
+    }
 
     public function get_permissions(){
         $query = "Select * from auth_user_permission where user_ref='{$this->id}'";
         $res = $this->sql->query($query);
+        d($this->sql->error());
         // add merge permissions groups
         return $res;
     }

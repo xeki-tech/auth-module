@@ -20,12 +20,10 @@ class xeki_auth
 
     private $field_identifier = "email";
 
-    private $status = "no_logged";
-
     private $local_config=[];
 
     private $sql;
-    private $user;
+    private $user=null;
 
     function get_value_param($key)
     {
@@ -193,7 +191,7 @@ class xeki_auth
     }
 
 
-    function create_user($user_identifier,$password,$additional_data){
+    function create_user($user_identifier,$password,$additional_data=array()){
         if($this->user_exist($user_identifier)){
             return new \xeki\error("user_exist");
         }
@@ -227,6 +225,18 @@ class xeki_auth
         }
     }
 
+    function group_exist($code_group){
+        $this->sql->sanitize($code_group);
+        $query = "select id from auth_group where code = '$code_group'";
+        $res = $this->sql->query($query);
+        if(count($res)>0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     function remove_user($user_identifier){
         $this->sql->sanitize($user_identifier);
         $this->sql->delete("auth_user"," {$this->field_identifier} = '$user_identifier' ");
@@ -242,20 +252,24 @@ class xeki_auth
     function remove_group($code){
         $this->sql->sanitize($code);
         $this->sql->delete("auth_group"," code = '$code' ");
-
     }
 
-    function create_group($name,$code){
+    function create_group($code,$name){
         $this->sql->sanitize($code);
+        // check if exist
+        if($this->group_exist($code)){
+            return new \xeki\error("group_exist");
+        }
         $data=[
             "name"=>$name,
             "code"=>$code,
         ];
         $this->sql->insert("auth_group",$data);
+        return true;
 
     }
 
-    function create_permission($name,$code){
+    function create_permission($code,$name){
         $data=[
             "name"=>$name,
             "code"=>$code,
@@ -292,8 +306,11 @@ class xeki_auth
 
 
 
-    function login_status(){
-//        d($_SESSION);
+    function is_logged(){
+        if($this->user!=null)
+            return true;
+
+        return false;
     }
 
     function login($user_identifier,$password){
@@ -346,11 +363,10 @@ class xeki_auth
         $_SESSION['xeki_auth']['last_view'] = time();
 //        $_SESSION['xeki_auth']['user_info'] = $this->get_info();
 
-        return true;
+        return $this->user;
 
     }
     function get_user(){
-
 
         return $this->user;
     }

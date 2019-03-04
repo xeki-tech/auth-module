@@ -53,7 +53,7 @@ class main
         if (self::$object == null) {
 
 
-            self::$object = new xeki_auth($this->config,);
+            self::$object = new xeki_auth($this->config);
         }
 //        d(self::$sql);
 //        $info = self::$sql->query("SELECT * FROM blog");

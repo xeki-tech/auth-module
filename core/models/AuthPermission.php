@@ -41,9 +41,10 @@ class Permission
 
     }
 
-
-
-
-
+    function load_info($info){
+        $this->id = $info['id'];
+        $this->code = $info['code'];
+        $this->name =$info['name'];
+    }
 
 }

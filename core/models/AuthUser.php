@@ -238,8 +238,6 @@ class User
         if(\xeki\core::is_error($error)){
             return new \xeki\error("permission ");
         }
-        d("permission info");
-        d($permission->id);
         //
         // check is exist relation
         $query = "Select * from auth_user_permission where user_ref='{$this->id}' and permission_ref='{$permission->id}'";
@@ -257,19 +255,12 @@ class User
         }
 
         // remove  permission
-
-        $data =[
-            "user_ref"=>$this->id,
-            "permission_ref"=>$permission->id
-        ];
-        d($data);
-        $res =$res = $this->sql->delete("auth_user_permission","user_ref='{$this->id}' and permission_ref='{$permission->id}");
+        $res =$res = $this->sql->delete("auth_user_permission","user_ref='{$this->id}' and permission_ref='{$permission->id}'");
         if($res ){
             return true;
         }
         else{
             // handing error sql error
-//            d($this->sql->error());
             return new \xeki\error("permission_remove_error_sql");
         }
 
@@ -296,7 +287,10 @@ class User
             // process groups
             $groups = [];
             foreach ($res as $item){
-                array_push($groups,$item['auth_group']);
+                // create groups
+                $group = new Group($this->local_config);
+                $group->load_info($item['auth_group']);
+                array_push($groups,$group);
             }
             return $groups;
         }
@@ -329,13 +323,20 @@ class User
     public function get_permissions(){
         $query = "Select * from auth_permission,auth_user_permission where auth_permission.id = auth_user_permission.permission_ref and user_ref='{$this->id}'";
         $res = $this->sql->query($query,true);
-        d($this->sql->error());
+
         if(!is_array($res)){ return new \xeki\error("sql_error"); }
 
+        $permissions = [];
         // parse permissions
+        foreach ($res as $item){
+            // create groups
+            $permission = new Permission($this->local_config);
+            $permission->load_info($item['auth_permission']);
+            array_push($permissions,$permission);
+        }
 
         // add merge permissions groups
-        return $res;
+        return $permissions;
     }
 
     public function has_permission($code_permission){

@@ -20,6 +20,11 @@ class Group
         $this->sql = \xeki\module_manager::import_module('db-sql',$local_config['db_config']);
     }
 
+    function load_info($info){
+        $this->id = $info['id'];
+        $this->code = $info['code'];
+        $this->name =$info['name'];
+    }
     function load_code($code){
 
         $query="select * from auth_group where code='{$code}'";

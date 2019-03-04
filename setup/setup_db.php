@@ -35,7 +35,7 @@ $table = array(
 $sql->create_table_array($table);
 
 $table = array(
-    'table' => 'auth_permissions',
+    'table' => 'auth_permission',
     'elements' => array(
         'code'  => [
             'type_field'=>'text',

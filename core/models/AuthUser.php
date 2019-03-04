@@ -202,16 +202,14 @@ class User
         if(\xeki\core::is_error($error)){
             return new \xeki\error("permission dont exist ");
         }
-        d("permission info");
-        d($permission->id);
-        //
+
         // check is exist relation
         $query = "Select * from auth_user_permission where user_ref='{$this->id}' and permission_ref='{$permission->id}'";
         $res = $this->sql->query($query);
-        if($res){
+        if(is_array($res)){
             if(count($res)>0){
                 // handling error
-                return new \xeki\error("group_already_added");
+                return new \xeki\error("permission_already_added");
             }
         }
         else{
@@ -226,7 +224,7 @@ class User
             "user_ref"=>$this->id,
             "permission_ref"=>$permission->id
         ];
-        $this->sql->insert('',$data);
+        $this->sql->insert('auth_user_permission',$data);
 
         return true;
 
@@ -329,14 +327,18 @@ class User
     }
 
     public function get_permissions(){
-        $query = "Select * from auth_user_permission where user_ref='{$this->id}'";
-        $res = $this->sql->query($query);
+        $query = "Select * from auth_permission,auth_user_permission where auth_permission.id = auth_user_permission.permission_ref and user_ref='{$this->id}'";
+        $res = $this->sql->query($query,true);
         d($this->sql->error());
+        if(!is_array($res)){ return new \xeki\error("sql_error"); }
+
+        // parse permissions
+
         // add merge permissions groups
         return $res;
     }
 
-    public function has_permissions($code_permission){
+    public function has_permission($code_permission){
 
         $permission = new permission($this->local_config);
         $error = $permission->load_code($code_permission);
@@ -344,13 +346,21 @@ class User
         if(\xeki\core::is_error($error)){
             return new \xeki\error("permission ");
         }
-        d("permission info");
-        d($permission->id);
 
         $query = "Select * from auth_user_permission where user_ref='{$this->id}' and permission_ref='{$permission->id}'";
         $res = $this->sql->query($query);
+
+        // validate groups permissions
+
+        if(!is_array($res)){ return new \xeki\error("sql_error"); }
+
+        if(count($res)>0){
+            return true;
+        }
+        else{
+            return false;
+        }
         // add merge permissions groups
-        return $res;
     }
 
     public function is_super_user(){

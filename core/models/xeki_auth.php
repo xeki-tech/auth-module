@@ -257,7 +257,7 @@ class xeki_auth
 
     function remove_permission($code){
         $this->sql->sanitize($code);
-        $this->sql->delete("auth_permissions"," code = '$code' ");
+        $this->sql->delete("auth_permission"," code = '$code' ");
 
     }
 
@@ -286,7 +286,7 @@ class xeki_auth
             "name"=>$name,
             "code"=>$code,
         ];
-        $this->sql->insert("auth_permissions",$data);
+        $this->sql->insert("auth_permission",$data);
 
     }
 

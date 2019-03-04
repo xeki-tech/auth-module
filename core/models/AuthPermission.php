@@ -22,7 +22,7 @@ class Permission
 
 
     function load_id($id){
-        $query="select * from auth_permissions where id='{$id}'";
+        $query="select * from auth_permission where id='{$id}'";
         $permission = $this->sql->query($query);
         $permission = $permission[0];
         $this->id = $permission['id'];
@@ -32,7 +32,7 @@ class Permission
     }
 
     function load_code($code){
-        $query="select * from auth_permissions where code='{$code}'";
+        $query="select * from auth_permission where code='{$code}'";
         $permission = $this->sql->query($query);
         $permission = $permission[0];
         $this->id = $permission['id'];

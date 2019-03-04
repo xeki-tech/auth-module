@@ -299,7 +299,7 @@ class xeki_auth
             "permission_ref"=>$permission->id,
 
         ];
-        $this->sql->insert("auth_group_permissions",$data);
+        $this->sql->insert("auth_group_permission",$data);
     }
 
     function get_group($code){

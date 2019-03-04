@@ -20,7 +20,7 @@ $table = array(
 $sql->create_table_array($table);
 
 $table = array(
-    'table' => 'auth_group_permissions',
+    'table' => 'auth_group_permission',
     'elements' => array(
         'group_ref'  => [
             'type_field'=>'number',

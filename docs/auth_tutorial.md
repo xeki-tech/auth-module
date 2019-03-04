@@ -5,7 +5,9 @@
 ### Setup db 
 
 ## Create login page
-
+### Page 
+### Action Method (option 1)
+### Url Method (opcion 2)
 
 ## Create logout page
 

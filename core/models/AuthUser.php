@@ -358,6 +358,28 @@ class User
         if(count($res)>0){
             return true;
         }
+
+        // check groups
+        $query = " SELECT * FROM
+                    auth_group,
+                    auth_group_permission,
+                    auth_permission,
+                    auth_user_group
+                    WHERE
+                    1
+                    AND auth_group.id = auth_group_permission.group_ref
+                    AND auth_permission.id = auth_group_permission.permission_ref
+                    AND auth_user_group.user_ref = {$this->id}
+                    AND auth_permission.id = {$permission->id}";
+        $res = $this->sql->query($query,true);
+
+        // validate groups permissions
+        if(!is_array($res)){ return new \xeki\error("sql_error"); }
+
+        if(count($res)>0){
+            return true;
+        }
+
         else{
             return false;
         }

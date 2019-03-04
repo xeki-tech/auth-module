@@ -237,6 +237,18 @@ class xeki_auth
         }
     }
 
+    function permission_exist($code_permission){
+        $this->sql->sanitize($code_permission);
+        $query = "select id from auth_permission where code = '$code_permission'";
+        $res = $this->sql->query($query);
+        if(count($res)>0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     function remove_user($user_identifier){
         $this->sql->sanitize($user_identifier);
         $this->sql->delete("auth_user"," {$this->field_identifier} = '$user_identifier' ");

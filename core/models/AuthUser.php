@@ -109,8 +109,6 @@ class User
         if(\xeki\core::is_error($error)){
             return $error;
         }
-        d("group info");
-        d($group->id);
         //
         // check is exist relation
         $query = "Select * from auth_user_group where user_ref='{$this->id}' and group_ref='{$group->id}'";
@@ -119,13 +117,12 @@ class User
         if(is_array($res)){
             if(count($res)>0){
                 // handling error
-
                 return new \xeki\error("group_already_added");
             }
         }
         else{
             // handing error sql error
-            d($this->sql->error());
+////            d($this->sql->error());
             return new \xeki\error("group_validate_error_sql");
         }
 
@@ -135,14 +132,14 @@ class User
             "user_ref"=>$this->id,
             "group_ref"=>$group->id
         ];
-        d($data);
+//        d($data);
         $res = $this->sql->insert('auth_user_group',$data);
         if($res ){
             return true;
         }
         else{
             // handing error sql error
-            d($this->sql->error());
+////            d($this->sql->error());
             return new \xeki\error("group_add_error_sql");
         }
 
@@ -158,8 +155,6 @@ class User
         if(\xeki\core::is_error($error)){
             return new \xeki\error("group ");
         }
-        d("group info");
-        d($group->id);
         //
         // check is exist relation
         $query = "Select * from auth_user_group where user_ref='{$this->id}' and group_ref='{$group->id}'";
@@ -172,25 +167,19 @@ class User
         }
         else{
             // handing error sql error
-            d($this->sql->error());
+//            d($this->sql->error());
             return new \xeki\error("group_validate_error_sql");
         }
 
         // remove  group
 
-        $data =[
-            "user_ref"=>$this->id,
-            "group_ref"=>$group->id
-        ];
-        d($data);
-        $res =$res = $this->sql->delete("auth_user_group","user_ref='{$this->id}' and group_ref='{$group->id}");
+        $res =$res = $this->sql->delete("auth_user_group","user_ref='{$this->id}' and group_ref='{$group->id}'");
         if($res ){
             return true;
         }
         else{
             // handing error sql error
-            d($this->sql->error());
-            return new \xeki\error("group_remove_error_sql");
+            return new \xeki\error("sql_error");
         }
     }
 
@@ -201,7 +190,7 @@ class User
         }
         else{
             // handing error sql error
-            d($this->sql->error());
+//            d($this->sql->error());
             return new \xeki\error("group_remove_error_sql");
         }
     }
@@ -211,7 +200,7 @@ class User
         $error = $permission->load_code($code_permission);
 
         if(\xeki\core::is_error($error)){
-            return new \xeki\error("group ");
+            return new \xeki\error("permission dont exist ");
         }
         d("permission info");
         d($permission->id);
@@ -227,8 +216,8 @@ class User
         }
         else{
             // handing error sql error
-//            d($this->sql->error());
-            return new \xeki\error("group_add_error_sql");
+            d($this->sql->error());
+            return new \xeki\error("permission_add_error_sql");
         }
 
         // add group
@@ -265,7 +254,7 @@ class User
         }
         else{
             // handing error sql error
-            d($this->sql->error());
+//            d($this->sql->error());
             return new \xeki\error("permission_validate_error_sql");
         }
 
@@ -282,7 +271,7 @@ class User
         }
         else{
             // handing error sql error
-            d($this->sql->error());
+//            d($this->sql->error());
             return new \xeki\error("permission_remove_error_sql");
         }
 
@@ -297,17 +286,46 @@ class User
         }
         else{
             // handing error sql error
-            d($this->sql->error());
+//            d($this->sql->error());
             return new \xeki\error("group_remove_error_sql");
         }
     }
 
     public function get_groups(){
-        $query = "Select * from auth_user_group where user_ref='{$this->id}'";
-        $res = $this->sql->query($query);
-        d($this->sql->error());
+        $query = "Select * from auth_group, auth_user_group where auth_user_group.group_ref = auth_group.id and user_ref='{$this->id}'";
+        $res = $this->sql->query($query,true);
+        if(is_array($res) ){
+            // process groups
+            $groups = [];
+            foreach ($res as $item){
+                array_push($groups,$item['auth_group']);
+            }
+            return $groups;
+        }
+        else{
+            // handing error sql error
+//            d($this->sql->error());
+            return new \xeki\error("sql_error");
+        }
+    }
 
-        return $res;
+    public function has_group($code){
+        $query = "Select * from auth_group, auth_user_group where auth_user_group.group_ref = auth_group.id and user_ref='{$this->id}' and auth_group.code='{$code}'";
+        $res = $this->sql->query($query,true);
+        if(is_array($res)){
+            // process groups
+            if(count($res)>0){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            // handing error sql error
+//            d($this->sql->error());
+            return new \xeki\error("sql_error");
+        }
     }
 
     public function get_permissions(){

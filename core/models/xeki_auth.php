@@ -23,7 +23,7 @@ class xeki_auth
     private $local_config=[];
 
     private $sql;
-    private $user=null;
+    private $user = null;
 
     function get_value_param($key)
     {
@@ -61,77 +61,66 @@ class xeki_auth
 
         // TODO handling better this error
         @session_start() or die(); // Don't output anything on invalid cookie forgery attempts
-
-
-        // check if sk_2 is empty
         if (empty($_COOKIE['sk_2'])){
-
             $sessionKey = $this->generate_session_key();
-
-
             setcookie("sk_2", $sessionKey, time()+$lifetime,\xeki\core::$URL_BASE);
             $_SESSION['sk_2'] = $sessionKey;
 
-
-
 //            $res = setcookie("sk_2", $sessionKey, time()+$lifetime, \xeki\core::$URL_BASE, $_SERVER['REQUEST_URI'], 1);
 //            d($res);
-
         }
-        else{
+        else {
             // renew cookie
-            setcookie("sk_2", $_COOKIE['sk_2'], time()+$lifetime,\xeki\core::$URL_BASE);
-        }
-
-
-
-
-        // Destroy the session completely (including client cookies) if the session keys don't match
-
-        if ($_SESSION['sk_2'] !== $_COOKIE['sk_2']) {
-            if(empty($_SESSION['sk_2']) || empty($_COOKIE['sk_2'])){
-                // handling error
-                if(!empty($_COOKIE['sk_2'] )){
-                    // crash
-                    $_SESSION['sk_2'] = $_COOKIE['sk_2'];
-                    // force re load session
-                    if(empty($_SESSION['sk_2'] )) {
-                        session_destroy();
-                        session_start();
+            setcookie("sk_2", $_COOKIE['sk_2'], time() + $lifetime, \xeki\core::$URL_BASE);
+            // Destroy the session completely (including client cookies) if the session keys don't match
+            if ($_SESSION['sk_2'] !== $_COOKIE['sk_2']) {
+                if (empty($_SESSION['sk_2']) || empty($_COOKIE['sk_2'])) {
+                    // handling error
+                    if (!empty($_COOKIE['sk_2'])) {
+                        // crash
                         $_SESSION['sk_2'] = $_COOKIE['sk_2'];
+                        // force re load session
+                        if (empty($_SESSION['sk_2'])) {
+                            session_destroy();
+                            session_start();
+                            $_SESSION['sk_2'] = $_COOKIE['sk_2'];
+                        }
                     }
                 }
-                else{
-                }
-            }
-            if(!$this->load_info_from_db()){
-//                    $this->logout();
-            }
-        }
 
-        // recover from db
-        if(!empty($_SESSION['xeki_auth']['logged'])){
-            if(empty($_SESSION['xeki_auth']['id_user'])) {
+                if (!$this->load_info_from_db()) {
+                    $this->logout();
+                }
+            } else {
                 $this->load_info_from_db();
             }
         }
 
-
-
     }
 
     function load_info_from_db(){
-
         if(empty($_COOKIE['sk_2']))return false;
 
-        $query = "select * from user_session where sk_2 ='{$_COOKIE['sk_2']}'";
+        $query = "select * from auth_user,auth_user_sessions where auth_user.id=auth_user_sessions.user_id and sk_2 ='{$_COOKIE['sk_2']}'";
 
-        $info_session = $this->sql->query($query);
+        $info_session = $this->sql->query($query,true);
 
         if (count($info_session)>0){
             $info_session = $info_session[0];
             $info = [];
             $info['id']=$info_session['user_id'];
+
+            $user = new User($this->local_config);
+            $user->load_info($info_session['auth_user']);
+
+            $this->user = $user;
+
+
+            if (!isset($_SESSION['xeki_auth'])) $_SESSION['xeki_auth'] = array();
+            $_SESSION['xeki_auth']['logged'] = true;
+            $_SESSION['xeki_auth']['id_user'] = $this->user->id;
+            $_SESSION['xeki_auth']['last_view'] = time();
+
             $_SESSION['xeki_auth']['logged'] = true;
             $_SESSION['xeki_auth']['id_user'] = $info['id'];
             $_SESSION['xeki_auth']['last_view'] = time();
@@ -319,9 +308,9 @@ class xeki_auth
 
 
     function is_logged(){
-        if($this->user!=null)
+        if($this->user !== null){
             return true;
-
+        }
         return false;
     }
 
@@ -375,11 +364,19 @@ class xeki_auth
         $_SESSION['xeki_auth']['last_view'] = time();
 //        $_SESSION['xeki_auth']['user_info'] = $this->get_info();
 
+        // Save session
+        $data = [
+            "user_id" => $this->user->id,
+            "sk_2"    => $_SESSION['sk_2'],
+        ];
+        $this->sql->insert("auth_user_sessions",$data);
+
         return $this->user;
 
     }
-    function get_user(){
 
+
+    function get_user(){
         return $this->user;
     }
 

@@ -143,7 +143,7 @@ $table_ref = array(
     'table' => 'auth_user_sessions',
     'elements' => array(
         'sk_2'  => [
-            'type_field'=>'text',
+            'type_field'=>'text_long',
             'null'=>'allow', // allow, not_allow
         ],
         'user_id'  => [
@@ -151,7 +151,7 @@ $table_ref = array(
             'null'=>'allow', // allow, not_allow
         ],
         'date_creation'  => [
-            'type_field'=>'text',
+            'type_field'=>'timestamp',
             'null'=>'allow', // allow, not_allow
         ],
         'last_use'  => [

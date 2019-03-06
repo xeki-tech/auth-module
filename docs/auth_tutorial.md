@@ -164,4 +164,15 @@ and to use it in the view:
 <h1>{{ unique_data }}</h1>
 ```
 ## Set global info for html
- 
+To send global data to the views, we must do it from the main.php file as follows: 
+- We can send a single data, or an array of data
+```
+\xeki\html_manager::add_extra_data("var_name", "unique data");
+\xeki\html_manager::add_extra_data("array_name", "array data");
+```
+And to use the data in any of our views, we just need to embed it in the html
+```
+<h1> Unique data: {{ var_name }} </h1>
+<h1> Array data: {{ array_name.value }} </h1> 
+
+```

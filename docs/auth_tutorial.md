@@ -125,9 +125,43 @@ This will redirect automatically to the url logout defined in the file url.php
 });
 ```
 ## Validate logged user restricted pages
-
-
+To validate if a user is logged in we can do it from the contolador, first we import the auth module and then validate it in the following way:
+```
+$auth = \xeki\module_manager::import_module('auth');
+if(!$auth->is_logged()){
+   redirect to bla 
+}
+```
 ## Get info user 
+Accessing user information is as simple as from the controller to store the following method in an array:
+```
+$auth = \xeki\module_manager::import_module('auth');
+$data['user'] = $user->get_info();
+```
+- And then pass the information to the view
+```
+\xeki\html_manager::render('file.html', $data);
+```
+- And to use the information in the view, you only need to embed it in the flat html as follows:
+```
+<h1>{{user.id}}</h1>
+<p>{{user.email}}</p>
+```
+You can also access unique data, as follows:
 
+```
+$auth = \xeki\module_manager::import_module('auth');
+$user = $auth->get_user(); 
+$data['user'] = $user->get_info(); //array data
+$data['unique_data'] = $user->get("email"); //unique data
+```
+then you send the data array to the view
+```
+\xeki\html_manager::render('info_user.html', $data);
+```
+and to use it in the view: 
+```
+<h1>{{ unique_data }}</h1>
+```
 ## Set global info for html
  

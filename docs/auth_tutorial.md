@@ -1,4 +1,4 @@
-# How use   
+# How use the module auth
 
 ## Dowload module 
 
@@ -113,7 +113,7 @@ url.php:
 
 ## Create logout page
 To close the user session you only need a button that directs to /logout
-Example: < a href="{{URL_BASE}}logout" > Logout </ a >
+Example: ```<a href="{{URL_BASE}}logout"> Logout </a>```
 <br>
 This will redirect automatically to the url logout defined in the file url.php
 <br>

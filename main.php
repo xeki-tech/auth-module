@@ -26,10 +26,8 @@ class main
     {
         // validate params v1 y should do this better :) 
         $required_items=array(
-            'folder_pages',
-            'default_pages',
-            'folder_base',
-        );
+
+                   );
         
         
         foreach ($required_items as $value) {            

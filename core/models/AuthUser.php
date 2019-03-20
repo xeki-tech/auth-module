@@ -72,7 +72,7 @@ class User
     {
         $value = $this->sql->sanitize($value);
         $data = [
-          $field => $value
+            $field => $value
         ];
         $res = $this->sql->update("auth_user",$data," id = {$this->id} ");
         return $res;
@@ -93,7 +93,6 @@ class User
     }
     public function set_password_encrypted($password)
     {
-        $password = hash($this->encryption_method, $password);
         $data = [
             "password" => $password
         ];

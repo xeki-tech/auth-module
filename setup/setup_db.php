@@ -109,11 +109,11 @@ $user_table = array(
 );
 
 $items = $auth->get_value_param("extra_fields_user");
-d($items);
+// d($items);
 if (is_array($items)) {
     $user_table['elements'] = array_merge($user_table['elements'], $items);
 }
-d($user_table['elements']);
+// d($user_table['elements']);
 $sql->create_table_array($user_table);
 
 

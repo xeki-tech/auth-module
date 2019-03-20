@@ -16,9 +16,9 @@ $MODULE_DATA_CONFIG = array(
 
 
         // Use this for {{key} copies in template email, is you need use i18n, set name as i18n_code_item
-        "main_recover_copies"=>array(
-            "example_key"=>"Example copie",
-            "other_example"=>"i18n_example",
+        "main_recover_copies" => array(
+            "example_key" => "Example copie",
+            "other_example" => "i18n_example",
 
         ),
 
@@ -29,23 +29,22 @@ $MODULE_DATA_CONFIG = array(
         //default configuration
 
 
-
         // config urls
-        "use_module_controllers"=>true, // for custom urls set false
+        "use_module_controllers" => true, // for custom urls set false
         "login_page_url" => "login",
         "register_page_url" => "register",
         "logout_page_url" => "logout",
         "recover_pass_page_url" => "recover-pass",
 
-        "confirm_account"=>true, // for custom urls set false
+        "confirm_account" => true, // for custom urls set false
         "confirm_account_route_mail" => "default",
         "confirm_account_route_mail" => "pages/mail/confirm_account.html",
 
         "confirm_account_route_url" => "confirm-account",
 
-        "confirm_account_copies"=>array(
-            "example_key"=>"Example copie",
-            "other_example"=>"i18n_example",
+        "confirm_account_copies" => array(
+            "example_key" => "Example copie",
+            "other_example" => "i18n_example",
 
         ),
 
@@ -72,7 +71,7 @@ $MODULE_DATA_CONFIG = array(
         "ultra_secure" => true,
 
         // messages text
-        "alerts_copies"=>array(
+        "alerts_copies" => array(
             "msg_no_valid_user" => "User or password not valid.",
             "msg_new_user" => "The user has been created.",
             "msg_user_exist" => "User already exists",

@@ -11,6 +11,7 @@ namespace auth;
  * Class xeki_auth
  * @package xeki_auth
  */
+
 /**
  * Class xeki_auth
  * @package xeki_auth
@@ -238,9 +239,6 @@ class xeki_auth
         }
 
 
-        
-
-
         if ($_SESSION['xeki_auth']['logged']) {
 
             $query = "SELECT * FROM {$this->table_user} WHERE id='" . $_SESSION['xeki_auth']['user_info']['id'] . "'";
@@ -391,8 +389,6 @@ class xeki_auth
             // check if is not activated
 
 
-
-
             return true;
         }
 
@@ -418,8 +414,8 @@ class xeki_auth
 
         $info = $this->sql->query($query);
         // for check and debug
-        
-        
+
+
         // check if exist
         $valid_login = false;
         if ($info) if (count($info) > 0) {
@@ -452,16 +448,15 @@ class xeki_auth
         // check if permission exits if not exists create
         $query = "SELECT * FROM {$this->table_permissions} WHERE code='{$permission_code}'";
         $res = $this->sql->query($query);
-        $id_permission=-1;
-        if(count($res)>0){
-            $id_permission=$res[0]['id'];
-        }
-        else{
+        $id_permission = -1;
+        if (count($res) > 0) {
+            $id_permission = $res[0]['id'];
+        } else {
             // create permission
             $data = array(
-                "code"=>$permission_code,
+                "code" => $permission_code,
             );
-            $id_permission = $this->sql->insert($this->table_permissions,$data);
+            $id_permission = $this->sql->insert($this->table_permissions, $data);
         }
 
         // check if user has permission
@@ -471,14 +466,14 @@ class xeki_auth
         $res = $this->sql->query($query);
 //        d($res);
 
-        if(count($res)>0){
+        if (count($res) > 0) {
             $has_valid_permission = true;
         }
 
         // super user
 //        d($this->user);
 //        d($this->user['xeki_super_admin']);
-        if($this->user['xeki_super_admin']=="on"){
+        if ($this->user['xeki_super_admin'] == "on") {
             return true;
         }
 
@@ -585,26 +580,23 @@ class xeki_auth
         $data = array_merge($data, $extra_data);
 
 //        $data['activated'] = "off";
-        $confirm_account= $this->get_value_param("confirm_account");
-        if($confirm_account){
+        $confirm_account = $this->get_value_param("confirm_account");
+        if ($confirm_account) {
             $_CODE = hash($this->encryption_method, rand(-9999999, 999999));
             $data['confirm_code'] = $_CODE;
             $data['activated'] = "off";
 
             // send email
-            $this->send_email_confirm_account($user,$_CODE,$data);
-        }
-        else{
+            $this->send_email_confirm_account($user, $_CODE, $data);
+        } else {
             $data['confirm_code'] = "confirmed";
         }
 
-        $welcome_account= $this->get_value_param("welcome_account");
-        if($welcome_account){
+        $welcome_account = $this->get_value_param("welcome_account");
+        if ($welcome_account) {
 
-            $this->send_email_welcome($user,$data);
+            $this->send_email_welcome($user, $data);
         }
-
-
 
 
         // check if user exist
@@ -617,7 +609,8 @@ class xeki_auth
     }
 
 
-    function send_email_welcome($email,$extra_data=array()){
+    function send_email_welcome($email, $extra_data = array())
+    {
 
 
         $mail = \xeki\module_manager::import_module("xeki_mail");
@@ -628,7 +621,7 @@ class xeki_auth
         $mail_confirm_account_route = $this->get_value_param("welcome_route_mail");
         $path_file = dirname(__FILE__) . "/../../../../$mail_confirm_account_route";
 
-        if(!file_exists($path_file)){
+        if (!file_exists($path_file)) {
             d($path_file);
             d("not exist");
             die();
@@ -646,19 +639,20 @@ class xeki_auth
 
 
         $copies = $xeki_i18n->process_i18n_info($copies);
-        $extra_data = array_merge($extra_data,$copies);
+        $extra_data = array_merge($extra_data, $copies);
 
 
-        $mail->send_email($email,$copies['subject'],$content,$extra_data);
+        $mail->send_email($email, $copies['subject'], $content, $extra_data);
         return true;
 
 
     }
 
 
-    function send_email_confirm_account($email,$code,$extra_data=array()){
+    function send_email_confirm_account($email, $code, $extra_data = array())
+    {
 
-        $confirm_account_url=$this->get_value_param("confirm_account_route_url");
+        $confirm_account_url = $this->get_value_param("confirm_account_route_url");
         $mail = \xeki\module_manager::import_module("xeki_mail");
 
 //            $_CODE
@@ -666,17 +660,17 @@ class xeki_auth
         $mail_confirm_account_route = $this->get_value_param("confirm_account_route_mail");
         $path_file = dirname(__FILE__) . "/../../../../$mail_confirm_account_route";
 
-        if(!file_exists($path_file)){
+        if (!file_exists($path_file)) {
             d($path_file);
             d("not exist");
             die();
-            $path_file = dirname(__FILE__)."/pages/mail/recover_pass.html";
+            $path_file = dirname(__FILE__) . "/pages/mail/recover_pass.html";
         }
 
         $content = file_get_contents($path_file);
 
         $url_base = \xeki\core::$URL_BASE_COMPLETE;
-        $extra_data['url']=$url_base.$confirm_account_url.'/'.$code;
+        $extra_data['url'] = $url_base . $confirm_account_url . '/' . $code;
 
         $subject = $this->get_value_param("confirm_account_subject");
         $copies = $this->get_value_param("confirm_account_copies");
@@ -684,9 +678,9 @@ class xeki_auth
 
         $xeki_i18n = \xeki\module_manager::import_module('xeki_i18n');
         $copies = $xeki_i18n->process_i18n_info($copies);
-        $extra_data = array_merge($extra_data,$copies);
+        $extra_data = array_merge($extra_data, $copies);
 
-        $mail->send_email($email,$copies['subject'],$content,$extra_data);
+        $mail->send_email($email, $copies['subject'], $content, $extra_data);
         return true;
 
     }
@@ -695,7 +689,8 @@ class xeki_auth
      * @param $user
      * @return mixed
      */
-    public function get_info_by_email($user){
+    public function get_info_by_email($user)
+    {
         $res = $this->sql->query("SELECT * FROM {$this->table_user} where {$this->field_user}='{$user}'");
         return $res[0];
     }
@@ -704,7 +699,8 @@ class xeki_auth
      * @param $user
      * @return string
      */
-    public function set_code_recover($user){
+    public function set_code_recover($user)
+    {
         $_CODE = hash($this->encryption_method, rand(-9999999, 999999));
         $data = array(
             $this->field_recover_code => $_CODE,
@@ -763,7 +759,8 @@ class xeki_auth
      * @param int $level
      * @return bool
      */
-    function check_auth($action = ""){
+    function check_auth($action = "")
+    {
         $this->check_data();
         // todo validate $action
         if ($action != "") {
@@ -782,7 +779,8 @@ class xeki_auth
     /**
      * @return bool
      */
-    function checkLogin(){
+    function checkLogin()
+    {
         $this->check_data();
 
         // check redirect page
@@ -791,11 +789,10 @@ class xeki_auth
         if ($this->check_auth()) return true;
         else {
 
-            if(strpos($_SERVER['REDIRECT_URL'],$this->login_page)!==false){
+            if (strpos($_SERVER['REDIRECT_URL'], $this->login_page) !== false) {
                 // loop redirect
                 \xeki\core::redirect('');
-            }
-            else{
+            } else {
                 \xeki\core::redirect($this->login_page . '?from=' . $this->logged_page);
             }
 
@@ -805,17 +802,20 @@ class xeki_auth
 
 
     // alias for checkLogin
+
     /**
      * @return bool
      */
-    function check_login(){
+    function check_login()
+    {
         return $this->checkLogin();
     }
 
     /**
      * @return bool
      */
-    function check_logged(){
+    function check_logged()
+    {
         return $this->checkLogin();
     }
 
@@ -823,7 +823,8 @@ class xeki_auth
     /**
      * @param string $action
      */
-    function is_auth($action = ""){
+    function is_auth($action = "")
+    {
         $this->check_auth();
     }
 
@@ -831,7 +832,8 @@ class xeki_auth
      * @param int $level
      * @return bool
      */
-    function pageLoginCheck($level = 1){
+    function pageLoginCheck($level = 1)
+    {
         $this->check_data();
         $this->logged_page;
         if ($this->logged) \xeki\core::redirect($this->logged_page);
@@ -842,7 +844,8 @@ class xeki_auth
     /**
      * @return bool
      */
-    public function isLogged(){
+    public function isLogged()
+    {
         return $this->logged;
     }
 
@@ -851,7 +854,8 @@ class xeki_auth
      * @param $item
      * @param $value
      */
-    public function setValue($item, $value){
+    public function setValue($item, $value)
+    {
         $_SESSION['xeki_auth'][$item] = $value;
     }
 
@@ -859,42 +863,48 @@ class xeki_auth
      * @param $item
      * @return string
      */
-    public function getValue($item){
+    public function getValue($item)
+    {
         return empty($_SESSION['xeki_auth'][$item]) ? '' : $_SESSION['xeki_auth'][$item];
     }
 
     /**
      *
      */
-    public function destroy(){
+    public function destroy()
+    {
         session_destroy();
     }
 
     /**
      * @param $table_user
      */
-    public function change_table_user($table_user){
+    public function change_table_user($table_user)
+    {
         $this->table_user = $table_user;
     }
 
     /**
      * @param $field_id
      */
-    public function change_field_id($field_id){
+    public function change_field_id($field_id)
+    {
         $this->field_id = $field_id;
     }
 
     /**
      * @param $field_user
      */
-    public function change_field_user($field_user){
+    public function change_field_user($field_user)
+    {
         $this->field_user = $field_user;
     }
 
     /**
      * @param string $url_login
      */
-    public function change_login_url($url_login = ""){
+    public function change_login_url($url_login = "")
+    {
         // valid method
         if ($url_login == '') return;
         $this->logged_page = $url_login;
@@ -949,12 +959,12 @@ class xeki_auth
         \xeki\core::redirect($this->register_page);
     }
 
-    public function is_super_admin(){
+    public function is_super_admin()
+    {
         $this->check_data();
-        if($this->user['xeki_super_admin']=="on"){
+        if ($this->user['xeki_super_admin'] == "on") {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }

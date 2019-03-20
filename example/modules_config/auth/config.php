@@ -15,7 +15,6 @@ $MODULE_DATA_CONFIG = array(
         "mail_recover_pass_route" => "core/pages/module_user_zone/mail/recover_pass.html",
 
 
-
         //custom configuration email // for cusmon uncomment this
         // "default_emails" => false,
         // "default_email_base" => "core/pages",
@@ -23,12 +22,12 @@ $MODULE_DATA_CONFIG = array(
         //default configuration
 
         // config urls
-        "use_module_controllers"=>true, // for custom urls set false
+        "use_module_controllers" => true, // for custom urls set false
         "login_page_url" => "login",
         "register_page_url" => "sign-up",
         "logout_page_url" => "logout",
         "recover_pass_page_url" => "recover-pass",
-        "recover_url"=>"recover-pass",
+        "recover_url" => "recover-pass",
 
 
         // db_info
@@ -49,8 +48,8 @@ $MODULE_DATA_CONFIG = array(
         "facebook_call_back_url" => "auth_facebook_callback",
 
 
-        "confirm_account"=>false,
-        "welcome_account"=>false,
+        "confirm_account" => false,
+        "welcome_account" => false,
         //
         "encryption_method" => "sha256",
         "ultra_secure" => true,
@@ -58,11 +57,11 @@ $MODULE_DATA_CONFIG = array(
 
         "recover_alert_ok" => "We have sent an email with the instructions to recover your password.",
         "mail_recover_subject" => "Recover pass Uris",
-        "mail_recover_copies"=>[],
+        "mail_recover_copies" => [],
 
-        "recover_alert_updated"=>"Your password has been updated",
-        "recover_alert_code_not_valid"=>"Your code is not valid",
-        "recover_alert_fail"=>'Email not valid',
+        "recover_alert_updated" => "Your password has been updated",
+        "recover_alert_code_not_valid" => "Your code is not valid",
+        "recover_alert_fail" => 'Email not valid',
 
         // messages text
         "msg_no_valid_user" => "User or password not valid.",

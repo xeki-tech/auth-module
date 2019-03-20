@@ -23,22 +23,22 @@ $_DEFAULT_END_KEYWORDS = ']';
 $_DEFAULT_PAGE_ERROR = '_default_error.php';
 
 
-$AG_FORCE_SSL=true;
+$AG_FORCE_SSL = true;
 // this is for force ssl for custom domains
-$AG_SSL_DOMAINS=array( ## keep emply for all domains
+$AG_SSL_DOMAINS = array( ## keep emply for all domains
     'domain.com',
 );
 
 // this vars are avalible on render and any part of controllers
 $GLOBAL_VARS = array(
-    "global_variable"=>"##XXYY33",
+    "global_variable" => "##XXYY33",
 );
 
 // $_ARRAY_MODULES_TO_LOAD_URLS = false; # false for no load 
 $_ARRAY_MODULES_TO_LOAD_URLS = array(); # array emply for all load
 $_ARRAY_MODULES_TO_LOAD_URLS = array(# array No emply for load only the modules
-     "xeki_sitemap",
-);   
+    "xeki_sitemap",
+);
 
 // for run star
 // for run end

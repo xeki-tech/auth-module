@@ -5,6 +5,7 @@
  * Date: 3/10/2016
  * Time: 11:42 PM
  */
+
 namespace xeki_auth;
 
 
@@ -25,26 +26,24 @@ class main
     function init($config)
     {
         // validate params v1 y should do this better :) 
-        $required_items=array(
+        $required_items = array();
 
-                   );
-        
-        
-        foreach ($required_items as $value) {            
-            if(!isset($config[$value])){
+
+        foreach ($required_items as $value) {
+            if (!isset($config[$value])) {
                 echo "ERROR CONFIG MODULE auth<br>";
                 echo "$value<br>";
                 die();
-            }          
+            }
 
         }
         # for set custom folder pages
         $this->default_pages = $config['default_pages'];
         $this->folder_base = $config['folder_base'];
-        $this->config=$config;
+        $this->config = $config;
         return true;
     }
-    
+
 
     function getObject()
     {

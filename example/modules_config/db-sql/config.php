@@ -5,13 +5,13 @@ $MODULE_DATA_CONFIG = array(
         "host" => "35.232.45.40",
         "user" => "root",
         "pass" => "5EmP^fg@6z(5",
-        "db"   => "xeki_test",
+        "db" => "xeki_test",
     ),
     "main_" => array(
         "host" => "35.232.45.40",
         "user" => "root",
         "pass" => "5EmP^fg@6z(5",
-        "db"   => "xeki_pruebas",
+        "db" => "xeki_pruebas",
     ),
     "secondary" => array(
         "host" => "127.0.0.1",
